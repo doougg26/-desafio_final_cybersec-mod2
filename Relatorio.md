@@ -57,16 +57,16 @@ O projeto seguiu a seguinte metodologia:
 ### SQL Injection (SQLi) e Cross-Site Scripting (XSS)
 
   * **Detecção:** Conforme o log do Dozzle, no modo **`DetectionOnly`**, os ataques foram identificados.
-      * **SQLi:** O WAF detectou a string de ataque `1' OR '1'='1'-- -` e ativou a regra `942100` (`SQL Injection Attack Detected via libinjection`).![Captura SQLi](print_detect1.png)
-      * **XSS:** O WAF detectou a string de ataque `<script>alert(\"XSS\")</script>` e ativou as regras `941100`, `941110`, `941160` e `941390` (`XSS Attack Detected`). ![Captura XSS](print_detect2.png)
+      * **SQLi:** O WAF detectou a string de ataque `1' OR '1'='1'-- -` e ativou a regra `942100` (`SQL Injection Attack Detected via libinjection`).![Captura SQLi](detectSQLi.png)
+      * **XSS:** O WAF detectou a string de ataque `<script>alert(\"XSS\")</script>` e ativou as regras `941100`, `941110`, `941160` e `941390` (`XSS Attack Detected`). ![Captura XSS](detectXSS1.png)
   * **Prints:** A página de print do `nmap` confirma que a máquina Kali se conectou ao host de defesa e o identificou na porta 8080 com o serviço Nginx. ![Captura nmap](print_nmap.png)
   * **Resultados:** As requisições de ataque resultaram em um código HTTP `302`, indicando que o WAF detectou a ameaça, mas permitiu o redirecionamento.
 
 ### Modo Blocking (403 + logs CRS)
 
-  * **Bloqueio:** No modo **`Enabled`**, as mesmas requisições de ataque foram imediatamente bloqueadas.
-  * **Prints:** As capturas de tela mostram que as requisições de ataque de SQLi e XSS não deram resultados, e o log do Dozzle exibe o WAF retornando um código HTTP `403 Forbidden`.![Captura Pagina](pagina.png)
-  * **Logs CRS:** Os logs confirmam o bloqueio, exibindo o `secrules_engine` como **`Enabled`** e as mesmas regras de detecção de ataque (`942100` e `941100`) sendo ativadas, mas desta vez, resultando em um bloqueio (`http_code: 403`).![Captura Bloqueio](print_block1.png)
+  * **Bloqueio:** No modo **`Enabled`**, as mesmas requisições de ataque foram imediatamente bloqueadas.![Captura Pagina](pagina.png)
+  * **Prints:** As capturas de tela mostram que as requisições de ataque de SQLi e XSS não deram resultados, e o log do Dozzle exibe o WAF retornando um código HTTP `403 Forbidden`.![Captura Bloqueio 1](blockSQLi.png) ![Captura Bloqueio 2](blockXSS.png)
+  * **Logs CRS:** Os logs confirmam o bloqueio, exibindo o `secrules_engine` como **`Enabled`** e as mesmas regras de detecção de ataque (`942100` e `941100`) sendo ativadas, mas desta vez, resultando em um bloqueio (`http_code: 403`).
 
 ### Iptables/tcpdump, tuning, decisões
 
@@ -137,5 +137,5 @@ Este projeto demonstrou de forma prática a importância de uma defesa em camada
   * **Prints:**
       * [Captura de tela da pagina de bloqueio](pagina.png)
       * [Captura de tela do `nmap`](print_nmap.png)
-      * Capturas de tela do Dozzle mostrando logs de detecção: [Captura 1](print_detect1) - [Captura 2](print_detect2)
+      * Capturas de tela do Dozzle mostrando logs de detecção: [Captura 1](print_detect1.png) - [Captura 2](print_detect2.png)
       * Capturas de tela do Dozzle mostrando logs de bloqueio (HTTP 403): [Captura 1](print_block1.png) - [Captura 2](print_block2.png)
